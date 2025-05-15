@@ -5,10 +5,12 @@ const gravitySlider = document.getElementById('gravity');
 const gLabel = document.getElementById('gVal');
 const angleSlider = document.getElementById('angle');
 const angleLabel = document.getElementById('angleVal');
-
+const restitutionSlider = document.getElementById('restitution');
+const restitutionLabel = document.getElementById('restitutionVal');
 
 let gravity = parseFloat(gravitySlider.value);
 let angle = parseFloat(angleSlider.value);
+let restitution = parseFloat(restitutionSlider.value);
 const speed = 13; // initial speed, can be adjusted
 let projectile = getInitialProjectile();
 
@@ -25,7 +27,6 @@ function getInitialProjectile() {
   };
 }
 
-
 gravitySlider.oninput = () => {
   gravity = parseFloat(gravitySlider.value);
   gLabel.textContent = gravity;
@@ -40,6 +41,10 @@ angleSlider.oninput = () => {
   }
 };
 
+restitutionSlider.oninput = () => {
+  restitution = parseFloat(restitutionSlider.value);
+  restitutionLabel.textContent = restitution;
+};
 
 canvas.addEventListener('click', () => {
   if (!projectile.launched) {
@@ -47,11 +52,9 @@ canvas.addEventListener('click', () => {
   }
 });
 
-
 function reset() {
   projectile = getInitialProjectile();
 }
-
 
 function drawTube() {
   // Tube base position (same as projectile start)
@@ -77,7 +80,6 @@ function drawProjectile() {
   ctx.fill();
 }
 
-
 function update() {
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -92,7 +94,7 @@ function update() {
 
   if (projectile.y > canvas.height - projectile.radius) {
     projectile.y = canvas.height - projectile.radius;
-    projectile.vy *= -0.6; // bounce effect
+    projectile.vy *= -restitution; // Use restitution for bounce effect
   }
 
   drawProjectile();
